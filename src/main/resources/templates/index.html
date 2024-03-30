@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta name="description" content="Описание страницы">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Task Clear Eyes</title>
+</head>
+<body>
+    <h1>Task Clear Eyes</h1><img src="111.png" alt="формула расчета" style="height: 150px">
+    <h4>Введите a, b, c</h4>
+    <form action="/calculation" th:object="${task}" method="post">
+        <div>
+            <label for="a">A</label>
+            <input type="number" id="a" th:field="*{a}" required th:value="${task.a}">
+        </div>
+        <div>
+            <label for="b">B</label>
+            <input type="number" id="b" th:field="*{b}" required th:value="${task.b}">
+        </div>
+        <div>
+            <label for="c">C</label>
+            <input type="number" id="c" th:field="*{c}" required th:value="${task.c}">
+        </div>
+        <p></p>
+        <button type="submit">Расчет</button>
+        <p th:if="${task.error} != null" th:text="${task.error}"></p>
+    </form>
+    <p></p>
+    <img src="222.png" alt="формула расчета 2" style="height: 40px"><a> = </a><span th:text="${task.resultOne}">0</span>
+    <p th:text="'X = ' + ${task.resultX}">X = 0</p>
+    <input type="hidden" id="resultX" th:value="${task.resultX}"/>
+    <h4>Введите y </h4>
+    <div>
+        <label for="resultY">Y</label>
+        <input type="number" id="resultY" name="resultY" onchange="myFunction()">
+    </div>
+    <canvas id="myChartCanvas" width="400" height="50"></canvas>
+    <script>
+        let myChart
+        function myFunction() {
+            var ctx = document.getElementById("myChartCanvas").getContext("2d");
+
+            var valY = document.getElementById("resultY").value;
+            var data = [{x: $("#resultX").val(), y: $("#resultY").val()}];
+
+            if (myChart) {
+                myChart.data.datasets[0].data = data;
+                console.log(data);
+                myChart.update();
+            } else {
+                myChart = new Chart(ctx, {
+                  type: 'scatter',
+                  data: {
+                    datasets: [
+                      {
+                        label: 'Result',
+                        data: data,
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1,
+                      },
+                    ],
+                  },
+                  options: {
+                    scales: {
+                        x: {
+                            position: 'center',
+                            min: -10,
+                            max: 10,
+                            title: {
+                              color: 'red',
+                              display: true,
+                              text: 'X',
+                              align: 'end'
+                            }
+                        },
+                        y: {
+                            position: 'center',
+                            min: -10,
+                            max: 10,
+                            title: {
+                              color: 'red',
+                              display: true,
+                              text: 'Y',
+                              align: 'end'
+                            }
+                        }
+                    }
+                  }
+                });
+            }
+        }
+    </script>
+</body>
